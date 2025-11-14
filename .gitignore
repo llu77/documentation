@@ -3,6 +3,7 @@
 .*
 !.gitattributes
 !.weblate.json
+!.github
 
 # Sphinx build files
 _build/
