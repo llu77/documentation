@@ -1,0 +1,142 @@
+#!/bin/bash
+
+# Example Session Start Hook with Advanced Features
+# Copy this to session-start.sh and customize as needed
+
+set -e  # Exit on error
+
+echo "🚀 Starting Claude Code session setup..."
+
+# =============================================================================
+# Environment Detection
+# =============================================================================
+
+if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
+  echo "ℹ️  Local environment detected - skipping automated setup"
+  echo "   Run 'make setup' or install dependencies manually"
+  exit 0
+fi
+
+echo "🌐 Remote environment detected"
+
+# =============================================================================
+# System Information
+# =============================================================================
+
+echo "📊 System Information:"
+echo "   Python: $(python3 --version 2>&1 | head -n1)"
+echo "   Working Directory: $(pwd)"
+echo "   User: $(whoami)"
+echo ""
+
+# =============================================================================
+# Python Dependencies
+# =============================================================================
+
+if [ -f "requirements.txt" ]; then
+  echo "📦 Installing Python dependencies..."
+
+  # Use pip with better output control
+  pip install --quiet --upgrade pip
+  pip install --quiet -r requirements.txt
+
+  # Verify installation
+  if [ $? -eq 0 ]; then
+    echo "✅ Python dependencies installed"
+  else
+    echo "❌ Failed to install Python dependencies"
+    exit 1
+  fi
+else
+  echo "⚠️  No requirements.txt found"
+fi
+
+# =============================================================================
+# Node.js Dependencies (Optional)
+# =============================================================================
+
+# Uncomment if you need Node.js dependencies
+# if [ -f "package.json" ]; then
+#   echo "📦 Installing Node.js dependencies..."
+#   npm install --quiet --no-progress
+#   echo "✅ Node.js dependencies installed"
+# fi
+
+# =============================================================================
+# Git Configuration (Optional)
+# =============================================================================
+
+# Uncomment to set git configuration for the session
+# echo "🔧 Configuring git..."
+# git config --local user.name "Claude Code" || true
+# git config --local user.email "claude-code@example.com" || true
+# echo "✅ Git configured"
+
+# =============================================================================
+# Build Documentation (Optional)
+# =============================================================================
+
+# Uncomment to build documentation on session start
+# echo "📚 Building documentation..."
+# make html > /dev/null 2>&1 || echo "⚠️  Documentation build skipped"
+
+# =============================================================================
+# Create Working Directories
+# =============================================================================
+
+# Create any necessary directories
+# mkdir -p .tmp
+# mkdir -p .cache
+# mkdir -p logs
+
+# =============================================================================
+# Environment Variables
+# =============================================================================
+
+# Set project-specific environment variables
+# export ODOO_VERSION="17.0"
+# export DOCUMENTATION_ENV="remote"
+# export LOG_LEVEL="INFO"
+
+# =============================================================================
+# Pre-flight Checks
+# =============================================================================
+
+echo "🔍 Running pre-flight checks..."
+
+# Check if critical files exist
+REQUIRED_FILES=("conf.py" "Makefile")
+for file in "${REQUIRED_FILES[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "⚠️  Missing required file: $file"
+  fi
+done
+
+# Check if critical directories exist
+REQUIRED_DIRS=("content" "static")
+for dir in "${REQUIRED_DIRS[@]}"; do
+  if [ ! -d "$dir" ]; then
+    echo "⚠️  Missing required directory: $dir"
+  fi
+done
+
+# =============================================================================
+# Completion
+# =============================================================================
+
+echo ""
+echo "✨ Session setup complete!"
+echo ""
+echo "📚 Quick Reference:"
+echo "   make html      - Build HTML documentation"
+echo "   make help      - Show all make commands"
+echo "   make clean     - Clean build artifacts"
+echo "   make linkcheck - Check for broken links"
+echo ""
+echo "💡 Tip: Use 'make' to build the documentation"
+echo ""
+
+# Optional: Display git status
+# echo "📋 Current branch: $(git branch --show-current)"
+# echo "   Status: $(git status --short | wc -l) file(s) changed"
+# echo ""

@@ -4,6 +4,7 @@
 !.gitattributes
 !.weblate.json
 !.github
+!.claude
 
 # Sphinx build files
 _build/
