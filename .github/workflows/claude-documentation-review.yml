@@ -1,0 +1,35 @@
+name: Claude Documentation Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'content/**/*.rst'
+      - 'content/**/*.md'
+      - '**/*.py'
+
+jobs:
+  documentation-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Documentation Review with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review documentation changes:
+            - Check for clarity and accuracy
+            - Verify code examples work correctly
+            - Ensure proper formatting and structure
+            - Check for broken links
+            - Verify technical accuracy
+          claude_args: "--max-turns 8"
